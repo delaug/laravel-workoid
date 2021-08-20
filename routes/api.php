@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Http\Controllers\API\RoleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 
@@ -22,16 +24,21 @@ Route::prefix('v1')->group(function () {
     Route::post('register', [AuthController::class, 'register'])->name('register');
     Route::post('login', [AuthController::class, 'login'])->name('login');
 
+
     /*
      * Protected routes
      */
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
+        Route::apiResources([
+            'roles' => RoleController::class
+        ]);
     });
 
 
     // Unhandled routes
     Route::any('{any}', function () {
-        return '404';
+        return response()->json(['status' => Response::HTTP_NOT_FOUND], Response::HTTP_NOT_FOUND);
     })->where(['any' => '(.*)']);
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -30,6 +31,9 @@ class AuthController extends Controller
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
+
+        // Role
+        $user->roles()->attach(Role::IS_USER);
 
         $token = $user->createToken($input['device_name'])->plainTextToken;
 
