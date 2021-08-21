@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Role;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
 
 class RoleController extends Controller
 {
@@ -29,23 +29,12 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param StoreRoleRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(StoreRoleRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => ['required','string','max:32'],
-            'description' => ['required','string','max:255'],
-        ]);
-
-        if($validator->fails()) {
-            return response()->json(['status' => Response::HTTP_BAD_REQUEST, 'errors' => $validator->errors()], Response::HTTP_BAD_REQUEST);
-        }
-
-        $input = $request->all();
-
-        $role = Role::create($input);
+        $role = Role::create($request->validated());
         return response()->json(['status' => Response::HTTP_OK, 'data' => $role], Response::HTTP_OK);
     }
 
@@ -63,24 +52,13 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param UpdateRoleRequest $request
      * @param  Role $role
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Role $role)
+    public function update(UpdateRoleRequest $request, Role $role)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => ['required','string','max:32'],
-            'description' => ['required','string','max:255'],
-        ]);
-
-        if($validator->fails()) {
-            return response()->json(['status' => Response::HTTP_BAD_REQUEST, 'errors' => $validator->errors()], Response::HTTP_BAD_REQUEST);
-        }
-
-        $input = $request->all();
-
-        if(!$role->update($input))
+        if(!$role->update($request->validated()))
             return response()->json(['status' => Response::HTTP_INTERNAL_SERVER_ERROR, 'error' => 'Can\'t update data'], Response::HTTP_INTERNAL_SERVER_ERROR);
 
         $role = Role::find($role->id);
@@ -96,8 +74,8 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         if (!$role->delete())
-            return response()->json(['status' => Response::HTTP_BAD_REQUEST, 'message' => 'Band can\'t deleted'], Response::HTTP_BAD_REQUEST);
+            return response()->json(['status' => Response::HTTP_BAD_REQUEST, 'message' => 'Role can\'t deleted'], Response::HTTP_BAD_REQUEST);
 
-        return response()->json(['status' => Response::HTTP_OK, 'data' => $role, 'message' => 'Band was deleted!'], Response::HTTP_OK);
+        return response()->json(['status' => Response::HTTP_OK, 'message' => 'Role was deleted!'], Response::HTTP_OK);
     }
 }
