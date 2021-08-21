@@ -3,38 +3,27 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginAuthRequest;
+use App\Http\Requests\RegisterAuthRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     /**
-     * @param Request $request
+     * @param RegisterAuthRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'name' => ['required','string','max:255'],
-            'email' => ['required','string','email','max:255','unique:users'],
-            'password' => ['required','string','min:6','confirmed'],
-            'device_name' => ['required','string'],
-        ]);
-
-        if($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], Response::HTTP_BAD_REQUEST);
-        }
-
-        $input = $request->all();
+    public function register(RegisterAuthRequest $request) {
+        $input = $request->validated();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
 
-        // Role
+        // Role & Token
         $user->roles()->attach(Role::IS_USER);
-
         $token = $user->createToken($input['device_name'])->plainTextToken;
 
         return response()->json(['token' => $token, 'user' => $user], Response::HTTP_OK);
@@ -42,27 +31,19 @@ class AuthController extends Controller
 
 
     /**
-     * @param Request $request
+     * @param LoginAuthRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request) {
-        $validator = Validator::make($request->all(),[
-            'email' => ['required','string','email','max:255'],
-            'password' => ['required','string','min:6'],
-            'device_name' => ['required','string'],
-        ]);
+    public function login(LoginAuthRequest $request) {
+        $input = $request->validated();
 
-        if($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], Response::HTTP_BAD_REQUEST);
-        }
+        $user = User::where('email', $input['email'])->first();
 
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$user || !Hash::check($input['password'], $user['password'])) {
             return response()->json(['error' => 'The provided credentials are incorrect.'], Response::HTTP_UNAUTHORIZED);
         }
 
-        return response()->json(['token' => $user->createToken($request->device_name)->plainTextToken, 'user' => $user]);
+        return response()->json(['token' => $user->createToken($input['device_name'])->plainTextToken, 'user' => $user]);
     }
 
     /**

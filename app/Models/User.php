@@ -43,6 +43,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['roles'];
+
     public function roles()
     {
         return $this->belongsToMany(Role::class);
