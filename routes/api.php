@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\API\BoardController;
+use App\Http\Controllers\API\CardController;
 use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\ListCardController;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,7 @@ Route::prefix('v1')->group(function () {
             'roles' => RoleController::class,
             'boards' => BoardController::class,
             'list-cards' => ListCardController::class,
+            'cards' => CardController::class,
         ]);
     });
 
