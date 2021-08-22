@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Controllers\API\BoardController;
 use App\Http\Controllers\API\RoleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -32,7 +33,8 @@ Route::prefix('v1')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
         Route::apiResources([
-            'roles' => RoleController::class
+            'roles' => RoleController::class,
+            'boards' => BoardController::class,
         ]);
     });
 
