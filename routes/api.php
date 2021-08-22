@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\API\BoardController;
 use App\Http\Controllers\API\RoleController;
+use App\Http\Controllers\API\ListCardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 
@@ -35,6 +36,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResources([
             'roles' => RoleController::class,
             'boards' => BoardController::class,
+            'list-cards' => ListCardController::class,
         ]);
     });
 

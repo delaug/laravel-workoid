@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Board extends Model
+class ListCard extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -17,7 +17,8 @@ class Board extends Model
      */
     protected $fillable = [
         'name',
-        'user_id'
+        'sort',
+        'board_id'
     ];
 
     /**
@@ -25,15 +26,10 @@ class Board extends Model
      *
      * @var array
      */
-    protected $with = ['list_cards'];
+    protected $with = [];
 
-    public function users()
+    public function board()
     {
-        return $this->belongsToMany(User::class);
-    }
-
-    public function list_cards()
-    {
-        return $this->hasMany(ListCard::class);
+        return $this->belongsTo(Board::class);
     }
 }
