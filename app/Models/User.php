@@ -48,7 +48,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $with = ['roles','boards'];
+    protected $with = ['roles', 'boards'];
 
     public function roles()
     {

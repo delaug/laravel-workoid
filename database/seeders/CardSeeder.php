@@ -24,6 +24,6 @@ class CardSeeder extends Seeder
         Card::create(['name' => 'Draw icons', 'sort' => 30, 'list_card_id'=>5]);
         Card::create(['name' => 'References', 'sort' => 10, 'list_card_id'=>8]);
 
-        Card::create(['name' => 'Team work planing', 'sort' => 10, 'list_card_id'=>9]);
+        Card::create(['name' => 'Make plane', 'sort' => 10, 'list_card_id'=>9]);
     }
 }

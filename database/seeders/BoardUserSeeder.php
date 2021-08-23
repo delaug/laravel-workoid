@@ -18,12 +18,8 @@ class BoardUserSeeder extends Seeder
         $admin = User::find(1);
         $user = User::find(2);
 
-        // Admin
         $admin->boards()->attach(1);
-        // User
         $user->boards()->attach(2);
-        // Team
-        $admin->boards()->attach(3);
         $user->boards()->attach(3);
     }
 }
