@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\BoardController;
 use App\Http\Controllers\API\CardController;
 use App\Http\Controllers\API\RoleController;
@@ -35,11 +36,13 @@ Route::prefix('v1')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
         Route::apiResources([
+            'users' => UserController::class,
             'roles' => RoleController::class,
             'boards' => BoardController::class,
             'list-cards' => ListCardController::class,
             'cards' => CardController::class,
-        ]);
+        ],
+        ['parameters' => [ 'users' => 'subject']]);
     });
 
 

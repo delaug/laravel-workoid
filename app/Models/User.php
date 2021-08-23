@@ -59,15 +59,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Board::class);
     }
 
-    public function scopeIsAdmin($query) {
-        return $query->whereHas('roles', function ($query){
-            return $query->where('id', Role::IS_ADMIN);
-        })->exists();
+    public function isAdmin() {
+        return $this->roles()->where('id',Role::IS_ADMIN)->exists();
     }
 
-    public function scopeIsUser($query) {
-        return $query->whereHas('roles', function ($query){
-            return $query->where('id', Role::IS_USER);
-        })->exists();
+    public function isUser() {
+        return $this->roles()->where('id',Role::IS_USER)->exists();
     }
 }
